@@ -27,14 +27,14 @@ class MyView: UIView {
         for _ in 0..<cats {
             imagesUrl.append(catImagesUrl.randomElement() ?? "")
         }
-        images = imagesUrl.map{ _ in nil }
+        images = Array(repeating: nil, count: imagesUrl.count)
         
         setupView()
     }
     
     override init(frame: CGRect) {
         imagesUrl = []
-        images = imagesUrl.map{ _ in nil }
+        images = Array(repeating: nil, count: imagesUrl.count)
         stack = UIStackView()
         super.init(frame: frame)
     }
