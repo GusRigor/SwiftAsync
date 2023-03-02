@@ -6,7 +6,9 @@ let catImagesUrl = [
     "https://cf.shopee.com.br/file/ba982c26c0910c0de5be09e34163a370",
     "https://m.media-amazon.com/images/I/619n7dVxFqL._AC_SX466_.jpg",
     "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhWSuoV5RUZiv4vizlSTEFOJCuA6Db5nwvtA&usqp=CAU",
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzr2nEnzvdK4OxHaU2au8MNxyNqU4TOmy0Jg&usqp=CAU"
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzr2nEnzvdK4OxHaU2au8MNxyNqU4TOmy0Jg&usqp=CAU",
+    "https://notAImage.com",
+    "not a URL"
 ]
 
 class MyView: UIView {
@@ -69,10 +71,15 @@ class MyView: UIView {
         imagesUrl.enumerated().forEach { (index, imageUrlString) in
             group.enter()
             guard let imageUrl:URL = URL(string: imageUrlString) else {
+                self.images[index] = UIImage(systemName: "heart.fill")
+                group.leave()
                 return
             }
             loadImge(withUrl: imageUrl){ [weak self] img in
-                guard let self = self else { return }
+                guard let self = self else {
+                    group.leave()
+                    return
+                }
                 self.images[index] = img
                 group.leave()
             }
@@ -94,6 +101,10 @@ class MyView: UIView {
         DispatchQueue.global().async {
             if let imageData = try? Data(contentsOf: url), let image = UIImage(data: imageData) {
                 completion(image)
+            } else {
+                if let image = UIImage(systemName: "heart") {
+                    completion(image)
+                }
             }
             
         }
